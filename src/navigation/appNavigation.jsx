@@ -2,6 +2,7 @@ import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Login } from "../screens/login";
+import { Register } from "../screens/register";
 
 function AppNavigator() {
   const Stack = createNativeStackNavigator();
@@ -12,7 +13,8 @@ function AppNavigator() {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="register" component={Register} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );
