@@ -1,4 +1,4 @@
-import { View, TextInput } from "react-native";
+import { View, TextInput, TouchableOpacity, Image } from "react-native";
 import { Styles } from "./register_styles";
 import { useState } from "react";
 import { Button, title, onPress } from "../components/button";
@@ -6,13 +6,18 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../services/firebaseConfig";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import Spinner from "react-native-loading-spinner-overlay";
+import { CustomCamera } from "../components/CustomCamera";
+
 function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [profilePic, setProfilePic] = useState("");
+
   const onSubmit = () => {
     if (firstName === "") {
       alert("Please Enter First Name");
@@ -61,10 +66,30 @@ function Register() {
         alert(authError.message);
       });
   };
-
+  const onPickImagePress = () => {
+    setIsCameraOpen(true); //camera invert
+  };
+  const onPicTaken = (picturePath) => {
+    setIsCameraOpen(false);
+    setProfilePic(picturePath);
+  };
   return (
     <View style={Styles.container}>
       <View style={Styles.formCon}>
+        <TouchableOpacity
+          style={Styles.pickImageCon}
+          onPress={onPickImagePress}
+        >
+          <Image
+            style={Styles.profieImage}
+            source={
+              profilePic === ""
+                ? require("../../assets/icon.png")
+                : { uri: profilePic }
+            }
+          />
+        </TouchableOpacity>
+
         <View style={Styles.form}>
           <TextInput
             style={Styles.inputCon}
@@ -98,6 +123,7 @@ function Register() {
       </View>
       <View style={Styles.bottomCon}></View>
       <Spinner visible={loading} textContent={"Loading..."} />
+      {isCameraOpen === true && <CustomCamera onPictureTaken={onPicTaken} />}
     </View>
   );
 }
