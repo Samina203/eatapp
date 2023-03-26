@@ -21,6 +21,13 @@ const Styles = StyleSheet.create({
     ...genericStyles.inputBase,
     marginVertical: 10,
   },
+  inputConPas: {
+    ...genericStyles.inputBase,
+    marginVertical: 10,
+    alignItems: "center",
+
+    flexDirection: "row",
+  },
 });
 
 export { Styles };

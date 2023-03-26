@@ -1,8 +1,25 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { Styles } from "./login_style";
 import { Button, onPress, outline, title } from "../components/button";
-
+import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
 function Login({ navigation }) {
+  const [passwordInput, setPasswordInput] = useState();
+  const [showPassword, setShowPassword] = useState(true);
+  const onEyePressed = () => {
+    if (showPassword == true) {
+      setShowPassword(false);
+    } else {
+      setShowPassword(true);
+    }
+  };
   myFunc = () => {
     alert("go");
   };
@@ -14,13 +31,27 @@ function Login({ navigation }) {
       <View style={Styles.formCon}>
         <View style={Styles.form}>
           <TextInput style={Styles.inputCon} placeholder="email"></TextInput>
-          <TextInput style={Styles.inputCon} placeholder="password"></TextInput>
+          <View style={Styles.inputConPas}>
+            <TextInput
+              style={{ width: "90%" }}
+              placeholder="password"
+              secureTextEntry={showPassword}
+              onChangeText={(text) => setPasswordInput(text)}
+            ></TextInput>
+            <Ionicons
+              name={showPassword ? "eye" : "eye-off"}
+              size={24}
+              color={showPassword ? "purple" : "orange"}
+              onPress={onEyePressed}
+            ></Ionicons>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Button Primary title={"SignIn"} onPress={myFunc}></Button>
+          </View>
         </View>
-        <View style={{ flexDirection: "row" }}>
-          <Button Primary title={"SignIn"} onPress={myFunc}></Button>
-        </View>
+
         <TouchableOpacity onPress={goToRegister}>
-          <Text style={{ marginTop: 10, marginLeft: 10 }}>
+          <Text style={{ marginTop: 5, marginLeft: 10 }}>
             Don't have a account SignUp
           </Text>
         </TouchableOpacity>

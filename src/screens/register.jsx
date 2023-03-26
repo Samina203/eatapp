@@ -80,54 +80,29 @@ function Register() {
     setIsCameraOpen(false);
     setProfilePic(picturePath);
   };
-  const attemptToUploadData = (uid) => {
-    setLoading(true);
-    // make the blob of the image
-    uriToBlob(profilePic)
-      .then((blobReponse) => {
-        const filename = `aslamkepic.jpg`;
-        const fileRef = ref(storage, filename);
-        uploadBytes(fileRef, blobReponse)
-          .then((uploadResponse) => {
-            getDownloadURL(fileRef)
-              .then((fileResponse) => {
-                console.log(fileResponse);
-                // upload the image info and rest of the info to firesore
+  const attemptToUploadData = async (uid) => {
+    try {
+      setLoading(true);
+      const blobResponse = await uriToBlob(profilePic);
+      const fileName = `profile_${Date.now()}`;
+      const fileRef = ref(storage, fileName);
+      const uploadImgResponse = await uploadBytes(fileRef, blobResponse);
+      const fileResponse = await getDownloadURL(fileRef);
 
-                const data = {
-                  firstName: firstName,
-                  lastName: lastName,
-                  email: email,
-                  profileImgUrl: fileResponse,
-                };
-
-                // setDoc ak doc bnao hmari firesotre db ma
-                // users collection k andr new UID k sath data la k
-                setDoc(doc(db, "users", uid), data)
-                  .then((lastResponse) => {
-                    alert("last response");
-                  })
-                  .catch((lastError) => {
-                    alert(lastError.message);
-                  });
-              })
-              .catch((fileError) => {
-                alert(fileError.message);
-                setLoading(false);
-              });
-
-            setLoading(false);
-          })
-          .catch((uploadError) => {
-            alert(uploadError.message);
-            setLoading(false);
-          });
-      })
-      .catch((blobError) => {
-        alert(blobError.message);
-        setLoading(false);
-      });
+      const data = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        profileImgUrl: fileResponse,
+      };
+      const uploadDocument = await setDoc(doc(db, "users", uid), data);
+      setLoading(false);
+    } catch (error) {
+      alert(error.message);
+      setLoading(false);
+    }
   };
+
   return (
     <View style={Styles.container}>
       <View style={Styles.formCon}>
@@ -165,11 +140,13 @@ function Register() {
             style={Styles.inputCon}
             placeholder="password"
             onChangeText={setPassword}
+            secureTextEntry={true}
           ></TextInput>
           <TextInput
             style={Styles.inputCon}
             placeholder="confirm Password"
             onChangeText={setConfirmPassword}
+            secureTextEntry={true}
           ></TextInput>
           <View style={{ flexDirection: "row" }}>
             <Button primary title={"Register"} onPress={onSubmit} />
