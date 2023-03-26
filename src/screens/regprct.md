@@ -80,53 +80,48 @@ function Register() {
     setIsCameraOpen(false);
     setProfilePic(picturePath);
   };
-  const attemptToUploadData = (uid) => {
-    setLoading(true);
-    // make the blob of the image
-    uriToBlob(profilePic)
-      .then((blobReponse) => {
-        const filename = `aslamkepic.jpg`;
-        const fileRef = ref(storage, filename);
-        uploadBytes(fileRef, blobReponse)
-          .then((uploadResponse) => {
-            getDownloadURL(fileRef)
-              .then((fileResponse) => {
-                console.log(fileResponse);
-                // upload the image info and rest of the info to firesore
-
-                const data = {
-                  firstName: firstName,
-                  lastName: lastName,
-                  email: email,
-                  profileImgUrl: fileResponse,
-                };
-
-                // setDoc ak doc bnao hmari firesotre db ma
-                // users collection k andr new UID k sath data la k
-                setDoc(doc(db, "users", uid), data)
-                  .then((lastResponse) => {
-                    alert("last response");
-                  })
-                  .catch((lastError) => {
-                    alert(lastError.message);
-                  });
-              })
-              .catch((fileError) => {
-                alert(fileError.message);
-                setLoading(false);
-              });
-
-            setLoading(false);
-          })
-          .catch((uploadError) => {
-            alert(uploadError.message);
-            setLoading(false);
-          });
-      })
-      .catch((blobError) => {
-        alert(blobError.message);
-        setLoading(false);
-      });
+  const onUploadImage = () => {
+    const attemptToUploadData = (uid) => {
+      setLoading(true);
+      uriToBlob(profilePic)
+        .then((blobResponse) => {
+          const filename = "sss.jpg";
+          const fileRef = ref(storage, filename);
+          uploadBytes(fileRef, blobResponse)
+            .then((uploadResponse) => {
+              getDownloadURL(fileRef)
+                .then((fileResponse) => {
+                  console.log(fileResponse);
+                  const data = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    profileImgUrl: fileResponse,
+                  };
+                  setDoc(doc(db, "users", uid), data)
+                    .then((lastResponse) => {
+                      alert("last response");
+                    })
+                    .catch((lastError) => {
+                      alert(lastError.message);
+                    });
+                })
+                .catch((fileError) => {
+                  alert(fileError.message);
+                  setLoading(false);
+                });
+              setLoading(false);
+            })
+            .catch((uploadError) => {
+              alert(Error.message);
+              setLoading(false);
+            });
+        })
+        .catch((blobError) => {
+          alert(blobError.message);
+          setLoading(false);
+        });
+    };
   };
   return (
     <View style={Styles.container}>
@@ -139,7 +134,7 @@ function Register() {
             style={Styles.profieImage}
             source={
               profilePic === ""
-                ? require("../../assets/useric.jpg")
+                ? require("../../assets/icon.png")
                 : { uri: profilePic }
             }
           />
@@ -176,7 +171,11 @@ function Register() {
           </View>
         </View>
       </View>
-      <View style={Styles.bottomCon}></View>
+      <View style={Styles.bottomCon}>
+        <View style={{ flexDirection: "row" }}>
+          <Button primary title={"upload image"} onPress={onUploadImage} />
+        </View>
+      </View>
       <Spinner visible={loading} textContent={"Loading..."} />
       {isCameraOpen === true && <CustomCamera onPictureTaken={onPicTaken} />}
     </View>
