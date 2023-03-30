@@ -4,6 +4,7 @@ import { removeIsUserLoggedIn } from "../../utilis/help";
 import { db } from "../../services/firebaseConfig";
 import { useEffect, useState } from "react";
 import { collection, doc, getDocs } from "firebase/firestore";
+import axios from "axios";
 
 function Main({ navigation }) {
   {
@@ -14,14 +15,10 @@ function Main({ navigation }) {
   }
   const [users, setUsers] = useState();
   useEffect(() => {
-    const scrapData = [];
-    getDocs(collection(db, "users"))
+    axios
+      .get("https://api.github.com/users")
       .then((response) => {
-        response.forEach((doc) => {
-          scrapData.push(doc.data());
-        });
-
-        setUsers(scrapData);
+        setUsers(response.data);
       })
       .catch((error) => {});
   }, []);
@@ -36,10 +33,10 @@ function Main({ navigation }) {
     >
       <Image
         style={{ width: 100, height: 100, borderRadius: 50, marginRight: 5 }}
-        src={item.profileImgUrl}
+        src={item.avatar_url}
       />
-      <Text style={{ fontSize: 15 }}>{item.firstName}</Text>
-      <Text style={{ fontSize: 15 }}>{item.lastName}</Text>
+      <Text style={{ fontSize: 15 }}>{item.name}</Text>
+      <Text style={{ fontSize: 15 }}>{item.login}</Text>
       <Text style={{ fontSize: 15 }}>{item.email}</Text>
     </View>
   );
