@@ -9,8 +9,8 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { CustomCamera } from "../components/CustomCamera";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { uriToBlob } from "../utilis/help";
-
-function Register() {
+import { saveIsUserLoggedIn } from "../utilis/help";
+function Register({ navigation }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -97,6 +97,8 @@ function Register() {
       };
       const uploadDocument = await setDoc(doc(db, "users", uid), data);
       setLoading(false);
+      saveIsUserLoggedIn();
+      navigation.replace("main");
     } catch (error) {
       alert(error.message);
       setLoading(false);

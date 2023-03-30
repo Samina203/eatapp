@@ -9,8 +9,17 @@ import { Styles } from "./login_style";
 import { Button, onPress, outline, title } from "../components/button";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getIsUserLoggedIn } from "../utilis/help";
+
 function Login({ navigation }) {
+  useEffect(() => {
+    getIsUserLoggedIn().then((response) => {
+      if (response === "true") {
+        navigation.replace("main");
+      }
+    });
+  }, []);
   const [passwordInput, setPasswordInput] = useState();
   const [showPassword, setShowPassword] = useState(true);
   const onEyePressed = () => {
@@ -20,9 +29,8 @@ function Login({ navigation }) {
       setShowPassword(true);
     }
   };
-  myFunc = () => {
-    alert("go");
-  };
+
+  const myFunc = () => {};
   const goToRegister = () => {
     navigation.navigate("register");
   };

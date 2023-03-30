@@ -14,10 +14,9 @@ function AppNavigator() {
           headerShown: false,
         }}
       >
+        <Stack.Screen name="main" component={Main} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="register" component={Register} />
-
-        <Stack.Screen name="main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );

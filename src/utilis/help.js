@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 /**
  * Converts a URI to a Blob object.
  *
@@ -23,4 +25,39 @@ function uriToBlob(uri) {
   });
 }
 
-export { uriToBlob };
+// save user loggedInSession
+
+const saveIsUserLoggedIn = async () => {
+  try {
+    await AsyncStorage.setItem("isUserLoggedIn", "true");
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+// remove when user logs out
+const removeIsUserLoggedIn = async () => {
+  try {
+    await AsyncStorage.setItem("isUserLoggedIn", "false");
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+// get loggedValue
+
+const getIsUserLoggedIn = async () => {
+  try {
+    const response = await AsyncStorage.getItem("isUserLoggedIn");
+    return response;
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+export {
+  uriToBlob,
+  getIsUserLoggedIn,
+  saveIsUserLoggedIn,
+  removeIsUserLoggedIn,
+};
